@@ -1,128 +1,86 @@
 /*
  * artemis.h
- * Escenario 4: Reingreso Atmosferico, Frenado Aerodinamico y Amerizaje.
+ * Simulador de Misiones Artemis - Escenario 4 (Reingreso, frenado y amerizaje)
  *
- * Contiene SOLO declaraciones: constantes, estructuras (struct/typedef) y
- * prototipos de las funciones publicas de la logica del simulador.
- * Las implementaciones estan en artemis.c.
+ * Parte del Integrante 3: Desaceleracion de la tripulacion y amerizaje.
+ * Este archivo declara las constantes, las estructuras de datos y los
+ * prototipos de las funciones que implementa artemis.c.
  */
+
 #ifndef ARTEMIS_H
 #define ARTEMIS_H
 
-/* ---------- Valores predeterminados de la mision (consigna) ---------- */
-#define MASA_ORION_PREDET             10400.0   /* kg    */
-#define GRAVEDAD_TERRESTRE            9.80      /* m/s^2 */
-#define VELOCIDAD_INICIAL_PREDET      11000.0   /* m/s   */
-#define ALTURA_INICIAL_PREDET         120000.0  /* m     */
-#define VELOCIDAD_FINAL_PREDET        25.0      /* m/s   */
-#define ALTURA_FINAL_PREDET           2500.0    /* m     */
-#define TIEMPO_DESACELERACION_PREDET  400.0     /* s     */
-#define VELOCIDAD_IMPACTO_PREDET      8.0       /* m/s   */
-#define DISTANCIA_HUNDIMIENTO_PREDET  1.50      /* m     */
+/* ---------------------------- CONSTANTES ---------------------------- */
 
-/* ---------- Ventana de seguridad del angulo de reingreso ---------- */
-#define ANGULO_MINIMO_SEGURO          5.5       /* grados */
-#define ANGULO_MAXIMO_SEGURO          7.0       /* grados */
+/* Gravedad terrestre en m/s^2 */
+#define GRAVEDAD_TERRESTRE 9.81
 
-/* ---------- Tamanios de arreglos ---------- */
-#define MAX_HISTORIAL                 50
-#define TAM_DESCRIPCION               60
+/* Limites de desaceleracion expresados en multiplos de g.
+   La consigna no los define: son criterios elegidos por el grupo
+   para clasificar el resultado. */
+#define LIMITE_TOLERABLE   3.0
+#define LIMITE_ELEVADA     5.0
+#define LIMITE_PELIGROSA   9.0
 
-/* ---------- Opciones del menu principal ---------- */
-#define OPCION_REINGRESO              1
-#define OPCION_DESACELERACION         2
-#define OPCION_AMERIZAJE              3
-#define OPCION_ANGULO                 4
-#define OPCION_PARAMETROS             5
-#define OPCION_HISTORIAL              6
-#define OPCION_REPORTE                7
-#define OPCION_SALIR                  8
+/* Niveles posibles de desaceleracion (enum: nombres para los valores 0,1,2,3) */
+typedef enum {
+    DESACEL_TOLERABLE = 0,
+    DESACEL_ELEVADA,
+    DESACEL_PELIGROSA,
+    DESACEL_CRITICA
+} NivelDesaceleracion;
 
-/* ---------- Opciones del submenu de parametros ---------- */
-#define PARAM_MODIFICAR               1
-#define PARAM_RESTABLECER             2
-#define PARAM_VOLVER                  3
+/* ---------------------------- ESTRUCTURAS ---------------------------- */
 
-/* ---------- Estructuras de datos ---------- */
-
-/* Masa de Orion, gravedad y constantes generales. */
+/* Datos generales de la mision */
 typedef struct {
-    double masaOrion;          /* kg    */
-    double gravedad;           /* m/s^2 */
+    double masaOrion;        /* masa de la capsula Orion [kg]  */
+    double gravedad;         /* gravedad terrestre [m/s^2]     */
 } DatosMision;
 
-/* Datos de la fase de reingreso y frenado aerodinamico. */
+/* Datos de la fase de reingreso (los que usa la desaceleracion) */
 typedef struct {
-    double velocidadInicial;   /* m/s */
-    double alturaInicial;      /* m   */
-    double velocidadFinal;     /* m/s (al abrir paracaidas) */
-    double alturaFinal;        /* m   */
-    double tiempoDesaceleracion; /* s */
+    double velocidadInicial;     /* [m/s] */
+    double velocidadFinal;       /* [m/s] */
+    double tiempoDesaceleracion; /* [s]   */
 } DatosReingreso;
 
-/* Datos del impacto en el oceano. */
+/* Datos del amerizaje */
 typedef struct {
-    double velocidadImpacto;     /* m/s */
-    double distanciaHundimiento; /* m   */
+    double velocidadImpacto;     /* [m/s] */
+    double distanciaHundimiento; /* [m]   */
 } DatosAmerizaje;
 
-/* Resultados de los calculos fisicos (los completan los Integrantes 2 y 3). */
+/* Resultados fisicos calculados */
 typedef struct {
-    double energiaCineticaInicial;
-    double energiaCineticaFinal;
-    double energiaPotencialInicial;
-    double energiaPotencialFinal;
-    double trabajoGravedad;
-    double trabajoRozamiento;
-    double energiaDisipada;
-    double desaceleracionMedia;      /* m/s^2 */
-    double desaceleracionEnG;        /* multiplos de g */
-    double energiaImpacto;
-    double trabajoAgua;
-    double fuerzaPromedioAgua;       /* N */
-    double pesoNave;                 /* N */
-    double fuerzaEnMultiploDePeso;
+    double desaceleracionMedia;  /* [m/s^2]                  */
+    double desaceleracionG;      /* [g]                      */
+    double energiaImpacto;       /* [J]                      */
+    double trabajoAgua;          /* [J]                      */
+    double fuerzaPromedioAgua;   /* [N]                      */
+    double pesoNave;             /* [N]                      */
+    double fuerzaEnPesos;        /* fuerza / peso (adimens.) */
 } ResultadoFisico;
 
-/* Resultado del analisis del angulo (lo completa el Integrante 4). */
-typedef struct {
-    double anguloIngresado;          /* grados */
-    int    diagnostico;              /* codigo definido por el Integrante 4 */
-} ResultadoSeguridad;
+/* ------------- PROTOTIPOS: DESACELERACION DE LA TRIPULACION ------------- */
 
-/* Un registro del historial (lo completa/amplia el Integrante 5). */
-typedef struct {
-    int    numeroSimulacion;
-    int    tipoAnalisis;             /* usar OPCION_REINGRESO, etc. */
-    char   descripcion[TAM_DESCRIPCION];
-    double resultadoPrincipal;
-} HistorialSimulacion;
+double calcularDesaceleracionMedia(double velInicial, double velFinal, double tiempo);
+double convertirDesaceleracionAG(double desaceleracion, double gravedad);
+NivelDesaceleracion evaluarDesaceleracion(double desaceleracionG);
+void mostrarAnalisisDesaceleracion(const DatosReingreso *reingreso,
+                                   const DatosMision *mision,
+                                   ResultadoFisico *resultado);
 
-/*
- * Contenedor de TODO el estado del simulador. main() crea una unica
- * variable de este tipo y se la pasa por puntero a cada modulo.
- */
-typedef struct {
-    DatosMision         mision;
-    DatosReingreso      reingreso;
-    DatosAmerizaje      amerizaje;
-    ResultadoFisico     fisico;
-    ResultadoSeguridad  seguridad;
-    HistorialSimulacion historial[MAX_HISTORIAL];
-    int                 cantidadHistorial;
-} EstadoSimulador;
+/* ------------------- PROTOTIPOS: AMERIZAJE E IMPACTO ------------------- */
 
-/* ---------- Prototipos de funciones publicas ---------- */
+double calcularEnergiaImpacto(double masa, double velocidad);
+double calcularTrabajoAgua(double energiaImpacto);
+double calcularFuerzaPromedioAgua(double trabajoAgua, double distancia);
+double calcularPesoNave(double masa, double gravedad);
+double calcularFuerzaEnMultiploDePeso(double fuerza, double peso);
+const char *evaluarImpacto(double fuerzaEnPesos);
+void mostrarAnalisisAmerizaje(const DatosAmerizaje *amerizaje,
+                              const DatosMision *mision,
+                              ResultadoFisico *resultado);
 
-/* Gestion de datos */
-void cargarDatosPredeterminados(EstadoSimulador *estado);
-void modificarDatosMision(EstadoSimulador *estado);
-void restablecerDatosMision(EstadoSimulador *estado);
-
-/* Analisis conectados a las opciones 1 a 4 del menu */
-void mostrarAnalisisRozamiento(EstadoSimulador *estado);      /* opcion 1 */
-void mostrarAnalisisDesaceleracion(EstadoSimulador *estado);  /* opcion 2 */
-void mostrarAnalisisAmerizaje(EstadoSimulador *estado);       /* opcion 3 */
-void mostrarAnalisisSeguridad(EstadoSimulador *estado);       /* opcion 4 */
-
-#endif /* ARTEMIS_H */
+#endif
