@@ -1,72 +1,86 @@
 /*
- * artemis.c
- * Logica del simulador (calculos fisicos y gestion de datos).
+ * artemis.h
+ * Simulador de Misiones Artemis - Escenario 4 (Reingreso, frenado y amerizaje)
  *
- * Integrante 1 solo escribio cargarDatosPredeterminados().
- * Las funciones marcadas "PROVISIONAL" son reemplazos TEMPORALES para que el
- * proyecto compile y se pueda probar el menu. Cada integrante debe BORRAR
- * el cuerpo provisional y poner su implementacion, MANTENIENDO el prototipo.
+ * Parte del Integrante 3: Desaceleracion de la tripulacion y amerizaje.
+ * Este archivo declara las constantes, las estructuras de datos y los
+ * prototipos de las funciones que implementa artemis.c.
  */
-#include <stdio.h>
-#include "artemis.h"
-#include "interfaz.h"
 
-/* Carga los valores originales del escenario (los de la consigna). */
-void cargarDatosPredeterminados(EstadoSimulador *estado)
-{
-    estado->mision.masaOrion = MASA_ORION_PREDET;
-    estado->mision.gravedad = GRAVEDAD_TERRESTRE;
+#ifndef ARTEMIS_H
+#define ARTEMIS_H
 
-    estado->reingreso.velocidadInicial = VELOCIDAD_INICIAL_PREDET;
-    estado->reingreso.alturaInicial = ALTURA_INICIAL_PREDET;
-    estado->reingreso.velocidadFinal = VELOCIDAD_FINAL_PREDET;
-    estado->reingreso.alturaFinal = ALTURA_FINAL_PREDET;
-    estado->reingreso.tiempoDesaceleracion = TIEMPO_DESACELERACION_PREDET;
+/* ---------------------------- CONSTANTES ---------------------------- */
 
-    estado->amerizaje.velocidadImpacto = VELOCIDAD_IMPACTO_PREDET;
-    estado->amerizaje.distanciaHundimiento = DISTANCIA_HUNDIMIENTO_PREDET;
-}
+/* Gravedad terrestre en m/s^2 */
+#define GRAVEDAD_TERRESTRE 9.81
 
-/* ===================== PROVISIONALES ===================== */
+/* Limites de desaceleracion expresados en multiplos de g.
+   La consigna no los define: son criterios elegidos por el grupo
+   para clasificar el resultado. */
+#define LIMITE_TOLERABLE   3.0
+#define LIMITE_ELEVADA     5.0
+#define LIMITE_PELIGROSA   9.0
 
-/* PROVISIONAL (Integrante 4 o quien se asigne): modificar parametros. */
-void modificarDatosMision(EstadoSimulador *estado)
-{
-    (void)estado;
-    mostrarMensajeAdvertencia("[PROVISIONAL] Modificar parametros: pendiente de implementar.");
-}
+/* Niveles posibles de desaceleracion (enum: nombres para los valores 0,1,2,3) */
+typedef enum {
+    DESACEL_TOLERABLE = 0,
+    DESACEL_ELEVADA,
+    DESACEL_PELIGROSA,
+    DESACEL_CRITICA
+} NivelDesaceleracion;
 
-/* PROVISIONAL: la version final puede agregar mas mensajes o validaciones. */
-void restablecerDatosMision(EstadoSimulador *estado)
-{
-    cargarDatosPredeterminados(estado);
-    printf("[PROVISIONAL] Parametros restablecidos a los valores originales.\n");
-}
+/* ---------------------------- ESTRUCTURAS ---------------------------- */
 
-/* PROVISIONAL (Integrante 2): opcion 1, trabajo de rozamiento y energia. */
-void mostrarAnalisisRozamiento(EstadoSimulador *estado)
-{
-    (void)estado;
-    mostrarMensajeAdvertencia("[PROVISIONAL] Opcion 1 - Reingreso atmosferico: pendiente (Integrante 2).");
-}
+/* Datos generales de la mision */
+typedef struct {
+    double masaOrion;        /* masa de la capsula Orion [kg]  */
+    double gravedad;         /* gravedad terrestre [m/s^2]     */
+} DatosMision;
 
-/* PROVISIONAL (Integrante 3): opcion 2, desaceleracion media. */
-void mostrarAnalisisDesaceleracion(EstadoSimulador *estado)
-{
-    (void)estado;
-    mostrarMensajeAdvertencia("[PROVISIONAL] Opcion 2 - Desaceleracion: pendiente (Integrante 3).");
-}
+/* Datos de la fase de reingreso (los que usa la desaceleracion) */
+typedef struct {
+    double velocidadInicial;     /* [m/s] */
+    double velocidadFinal;       /* [m/s] */
+    double tiempoDesaceleracion; /* [s]   */
+} DatosReingreso;
 
-/* PROVISIONAL (Integrante 3): opcion 3, impacto y fuerza del agua. */
-void mostrarAnalisisAmerizaje(EstadoSimulador *estado)
-{
-    (void)estado;
-    mostrarMensajeAdvertencia("[PROVISIONAL] Opcion 3 - Amerizaje: pendiente (Integrante 3).");
-}
+/* Datos del amerizaje */
+typedef struct {
+    double velocidadImpacto;     /* [m/s] */
+    double distanciaHundimiento; /* [m]   */
+} DatosAmerizaje;
 
-/* PROVISIONAL (Integrante 4): opcion 4, seguridad del angulo. */
-void mostrarAnalisisSeguridad(EstadoSimulador *estado)
-{
-    (void)estado;
-    mostrarMensajeAdvertencia("[PROVISIONAL] Opcion 4 - Angulo de reingreso: pendiente (Integrante 4).");
-}
+/* Resultados fisicos calculados */
+typedef struct {
+    double desaceleracionMedia;  /* [m/s^2]                  */
+    double desaceleracionG;      /* [g]                      */
+    double energiaImpacto;       /* [J]                      */
+    double trabajoAgua;          /* [J]                      */
+    double fuerzaPromedioAgua;   /* [N]                      */
+    double pesoNave;             /* [N]                      */
+    double fuerzaEnPesos;        /* fuerza / peso (adimens.) */
+} ResultadoFisico;
+
+/* ------------- PROTOTIPOS: DESACELERACION DE LA TRIPULACION ------------- */
+
+double calcularDesaceleracionMedia(double velInicial, double velFinal, double tiempo);
+double convertirDesaceleracionAG(double desaceleracion, double gravedad);
+NivelDesaceleracion evaluarDesaceleracion(double desaceleracionG);
+void mostrarAnalisisDesaceleracion(const DatosReingreso *reingreso,
+                                   const DatosMision *mision,
+                                   ResultadoFisico *resultado);
+
+/* ------------------- PROTOTIPOS: AMERIZAJE E IMPACTO ------------------- */
+
+double calcularEnergiaImpacto(double masa, double velocidad);
+double calcularTrabajoAgua(double energiaImpacto);
+double calcularFuerzaPromedioAgua(double trabajoAgua, double distancia);
+double calcularPesoNave(double masa, double gravedad);
+double calcularFuerzaEnMultiploDePeso(double fuerza, double peso);
+const char *evaluarImpacto(double fuerzaEnPesos);
+void mostrarAnalisisAmerizaje(const DatosAmerizaje *amerizaje,
+                              const DatosMision *mision,
+                              ResultadoFisico *resultado);
+
+#endif
