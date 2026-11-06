@@ -210,3 +210,116 @@ void mostrarAnalisisAmerizaje(const DatosAmerizaje *amerizaje,
     printf("Fuerza / peso        : %.2f veces el peso\n", resultado->fuerzaEnPesos);
     printf("Evaluacion: %s\n", evaluarImpacto(resultado->fuerzaEnPesos));
 }
+/* ============================================================
+ *     ANGULO DE REINGRESO Y SEGURIDAD  (Integrante 4)
+ * ============================================================ */
+
+/* Verifica si el angulo esta dentro de la ventana de seguridad (5.5° a 7.0°) */
+int validarAnguloReingreso(double angulo)
+{
+    if (angulo >= ANGULO_MIN_SEGURO && angulo <= ANGULO_MAX_SEGURO) {
+        return 1;
+    }
+    return 0;
+}
+
+/* Clasifica el tipo de trayectoria segun el angulo */
+void evaluarTrayectoriaReingreso(double angulo, char *resultado)
+{
+    if (angulo < ANGULO_MIN_SEGURO) {
+        strcpy(resultado, "REBOTE_ATMOSFERICO");
+    } else if (angulo > ANGULO_MAX_SEGURO) {
+        strcpy(resultado, "DESACELERACION_EXCESIVA");
+    } else {
+        strcpy(resultado, "SEGURA");
+    }
+}
+
+/* Explica las consecuencias fisicas segun el angulo */
+void analizarConsecuenciasAngulo(double angulo, char *explicacion)
+{
+    if (angulo < ANGULO_MIN_SEGURO) {
+        sprintf(explicacion,
+            "ANGULO BAJO (%.2f < 5.5):\n"
+            "  - La capsula no penetra lo suficiente en la atmosfera.\n"
+            "  - Se produce un REBOTE ATMOSFERICO.\n"
+            "  - La nave sale de nuevo al espacio y se pierde la mision.\n"
+            "  - No se logra el amerizaje previsto.",
+            angulo);
+    } else if (angulo > ANGULO_MAX_SEGURO) {
+        sprintf(explicacion,
+            "ANGULO ALTO (%.2f > 7.0):\n"
+            "  - La capsula entra demasiado pronunciada en la atmosfera.\n"
+            "  - Se genera DESACELERACION EXCESIVA.\n"
+            "  - La tripulacion experimenta fuerzas g peligrosas.\n"
+            "  - Riesgo de dano estructural o lesiones graves.",
+            angulo);
+    } else {
+        sprintf(explicacion,
+            "ANGULO DENTRO DE LA VENTANA DE SEGURIDAD (%.2f):\n"
+            "  - Trayectoria OPTIMA de reingreso.\n"
+            "  - La desaceleracion se mantiene en niveles seguros.\n"
+            "  - El escudo termico funciona correctamente.\n"
+            "  - Se garantiza un amerizaje controlado en el oceano.",
+            angulo);
+    }
+}
+
+/* Funcion principal de seguridad: pide el angulo, valida y muestra el analisis.
+   Es la que llama main.c cuando el usuario elige OPCION_ANGULO. */
+void mostrarAnalisisSeguridad(EstadoSimulador *estado)
+{
+    double angulo;
+    char tipoTrayectoria[40];
+    char consecuencias[500];
+    int anguloValido = 0;
+
+    printf("\n--- ANALISIS DE SEGURIDAD DEL ANGULO DE REINGRESO ---\n");
+    printf("Ventana de seguridad: %.1f grados a %.1f grados\n\n",
+           ANGULO_MIN_SEGURO, ANGULO_MAX_SEGURO);
+
+    /* Pedimos el angulo hasta que sea valido (0 a 90) */
+    do {
+        printf("Ingrese el angulo de reingreso (grados): ");
+        if (scanf("%lf", &angulo) != 1) {
+            printf("Error: debe ingresar un numero.\n");
+            while (getchar() != '\n');  /* limpiar buffer */
+            continue;
+        }
+        while (getchar() != '\n');  /* limpiar buffer */
+
+        if (angulo < 0.0 || angulo > 90.0) {
+            printf("Error: el angulo debe estar entre 0 y 90 grados.\n");
+        } else {
+            anguloValido = 1;
+        }
+    } while (!anguloValido);
+
+    /* Guardamos en la estructura del estado */
+    estado->seguridad.angulo = angulo;
+    estado->seguridad.esSeguro = validarAnguloReingreso(angulo);
+
+    if (estado->seguridad.esSeguro) {
+        strcpy(estado->seguridad.diagnostico, "SEGURO - Dentro de la ventana de reingreso");
+    } else if (angulo < ANGULO_MIN_SEGURO) {
+        strcpy(estado->seguridad.diagnostico, "PELIGRO - Riesgo de rebote atmosferico");
+    } else {
+        strcpy(estado->seguridad.diagnostico, "PELIGRO - Riesgo de desaceleracion excesiva");
+    }
+
+    evaluarTrayectoriaReingreso(angulo, tipoTrayectoria);
+    analizarConsecuenciasAngulo(angulo, consecuencias);
+
+    printf("\n============================================================\n");
+    printf("       ANALISIS DE SEGURIDAD - ANGULO DE REINGRESO\n");
+    printf("============================================================\n");
+    printf("  Angulo ingresado     : %.2f grados\n", angulo);
+    printf("  Ventana de seguridad : %.1f a %.1f grados\n",
+           ANGULO_MIN_SEGURO, ANGULO_MAX_SEGURO);
+    printf("------------------------------------------------------------\n");
+    printf("  Diagnostico          : %s\n", estado->seguridad.diagnostico);
+    printf("  Tipo de trayectoria  : %s\n", tipoTrayectoria);
+    printf("------------------------------------------------------------\n");
+    printf("%s\n", consecuencias);
+    printf("============================================================\n");
+}
