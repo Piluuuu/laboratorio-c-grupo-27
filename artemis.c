@@ -56,6 +56,27 @@ void mostrarAnalisisRozamiento(const DatosReingreso *reingreso,
     printf("El escudo termico protege la capsula del calentamiento durante el reingreso.\n");
 }
 
+/* Carga los valores originales del escenario Artemis. */
+void cargarDatosPredeterminados(EstadoSimulador *estado)
+{
+    estado->mision = (DatosMision){
+        .masaOrion = 10400.0,
+        .gravedad = GRAVEDAD_TERRESTRE
+    };
+
+    estado->reingreso = (DatosReingreso){
+        .velocidadInicial = 11000.0,
+        .velocidadFinal = 25.0,
+        .tiempoDesaceleracion = 400.0,
+        .alturaInicial = 120000.0,
+        .alturaFinal = 2500.0
+    };
+
+    estado->amerizaje = (DatosAmerizaje){
+        .velocidadImpacto = 8.0,
+        .distanciaHundimiento = 1.50
+    };
+}
 /* =====================================================================
  *                 DESACELERACION DE LA TRIPULACION
  * ===================================================================== */

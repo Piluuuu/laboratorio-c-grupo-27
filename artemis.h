@@ -93,5 +93,31 @@ void mostrarAnalisisAmerizaje(const DatosAmerizaje *amerizaje,
                               ResultadoFisico *resultado);
 void calcularResultadosReingreso(const DatosMision *mision, const DatosReingreso *reingreso, ResultadoFisico *resultado);
 void mostrarAnalisisRozamiento(const DatosReingreso *reingreso, const DatosMision *mision, ResultadoFisico *resultado);
+typedef enum {
+    OPCION_REINGRESO = 1,
+    OPCION_DESACELERACION,
+    OPCION_AMERIZAJE,
+    OPCION_ANGULO,
+    OPCION_PARAMETROS,
+    OPCION_HISTORIAL,
+    OPCION_REPORTE,
+    OPCION_SALIR
+} OpcionPrincipal;
+
+typedef enum {
+    PARAM_MODIFICAR = 1,
+    PARAM_RESTABLECER,
+    PARAM_VOLVER
+} OpcionParametros;
+
+typedef struct {
+    DatosMision mision;
+    DatosReingreso reingreso;
+    DatosAmerizaje amerizaje;
+    ResultadoFisico fisico;
+    int cantidadHistorial;
+} EstadoSimulador;
+
+void cargarDatosPredeterminados(EstadoSimulador *estado);
 
 #endif

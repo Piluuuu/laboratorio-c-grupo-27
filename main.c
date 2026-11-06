@@ -81,7 +81,8 @@ void procesarOpcionPrincipal(int opcion, EstadoSimulador *estado)
 {
     switch (opcion) {
         case OPCION_REINGRESO:
-            mostrarAnalisisRozamiento(estado);
+            mostrarAnalisisRozamiento(&estado->reingreso, &estado->mision,
+                              &estado->fisico);
             break;
         case OPCION_DESACELERACION:
             mostrarAnalisisDesaceleracion(estado);
