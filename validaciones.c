@@ -1,55 +1,50 @@
 #include "validaciones.h"
 
 /* ============================================================
-   MÓDULO DE VALIDACIONES
+   MODULO DE VALIDACIONES
    Responsable: Integrante 4 - Seguridad y validaciones
    ============================================================ */
 
 /* ---------- LECTURA SEGURA DE ENTEROS ---------- */
-int leerEntero(const char *mensaje) {
-    int valor;
+int leerEntero(const char *mensaje, int *destino)
+{
     int resultado;
 
-    do {
-        printf("%s", mensaje);
-        resultado = scanf("%d", &valor);
+    printf("%s", mensaje);
+    resultado = scanf("%d", destino);
 
-        if (resultado != 1) {
-            printf("Error: Debe ingresar un número entero válido.\n");
-            limpiarBufferEntrada();
-        }
-    } while (resultado != 1);
+    if (resultado != 1) {
+        limpiarBufferEntrada();
+        return 0;   /* error o EOF */
+    }
 
     limpiarBufferEntrada();
-    return valor;
+    return 1;       /* ok */
 }
 
 /* ---------- LECTURA SEGURA DE FLOTANTES ---------- */
-float leerFlotante(const char *mensaje) {
-    float valor;
+int leerFlotante(const char *mensaje, double *destino)
+{
     int resultado;
 
-    do {
-        printf("%s", mensaje);
-        resultado = scanf("%f", &valor);
+    printf("%s", mensaje);
+    resultado = scanf("%lf", destino);
 
-        if (resultado != 1) {
-            printf("Error: Debe ingresar un número decimal válido.\n");
-            limpiarBufferEntrada();
-        }
-    } while (resultado != 1);
+    if (resultado != 1) {
+        limpiarBufferEntrada();
+        return 0;
+    }
 
     limpiarBufferEntrada();
-    return valor;
+    return 1;
 }
 
 /* ---------- LECTURA SEGURA DE CARACTERES ---------- */
-char leerCaracter(const char *mensaje) {
+char leerCaracter(const char *mensaje)
+{
     char caracter;
 
     printf("%s", mensaje);
-
-    /* Limpiamos posibles residuos antes de leer el carácter */
     limpiarBufferEntrada();
     caracter = getchar();
     limpiarBufferEntrada();
@@ -58,45 +53,46 @@ char leerCaracter(const char *mensaje) {
 }
 
 /* ---------- VALIDAR RANGO ---------- */
-int validarRango(float valor, float min, float max) {
+int validarRango(double valor, double min, double max)
+{
     if (valor >= min && valor <= max) {
-        return 1;   /* Dentro del rango */
-    }
-    return 0;       /* Fuera del rango */
-}
-
-/* ---------- VALIDAR OPCIÓN DE MENÚ ---------- */
-int validarOpcionMenu(int opcion, int maxOpcion) {
-    if (opcion >= 1 && opcion <= maxOpcion) {
         return 1;
     }
-    printf("Opción inválida. Debe elegir un número entre 1 y %d.\n", maxOpcion);
+    return 0;
+}
+
+/* ---------- VALIDAR OPCION DE MENU ---------- */
+int validarOpcionMenu(int opcion, int min, int max)
+{
+    if (opcion >= min && opcion <= max) {
+        return 1;
+    }
     return 0;
 }
 
 /* ---------- VALIDAR VALOR POSITIVO ---------- */
-int validarValorPositivo(float valor) {
-    if (valor > 0.0f) {
+int validarValorPositivo(double valor)
+{
+    if (valor > 0.0) {
         return 1;
     }
-    printf("Error: El valor debe ser mayor que cero.\n");
     return 0;
 }
 
 /* ---------- LIMPIAR BUFFER DE ENTRADA ---------- */
-void limpiarBufferEntrada(void) {
+void limpiarBufferEntrada(void)
+{
     int c;
     while ((c = getchar()) != '\n' && c != EOF) {
-        /* Descarta todos los caracteres restantes en el buffer */
+        /* descarta caracteres sobrantes */
     }
 }
 
-/* ---------- VALIDAR ÁNGULO GENÉRICO ---------- */
-int validarAngulo(float angulo) {
-    /* Un ángulo de reingreso realista está entre 0° y 90° */
-    if (angulo >= 0.0f && angulo <= 90.0f) {
+/* ---------- VALIDAR ANGULO ---------- */
+int validarAngulo(double angulo)
+{
+    if (angulo >= 0.0 && angulo <= 90.0) {
         return 1;
     }
-    printf("Error: El ángulo debe estar entre 0 y 90 grados.\n");
     return 0;
 }
