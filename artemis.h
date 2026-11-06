@@ -21,6 +21,9 @@
 #define LIMITE_TOLERABLE   3.0
 #define LIMITE_ELEVADA     5.0
 #define LIMITE_PELIGROSA   9.0
+/* Ventana de seguridad del angulo de reingreso (Integrante 4) */
+#define ANGULO_MIN_SEGURO   5.5
+#define ANGULO_MAX_SEGURO   7.0
 
 /* Niveles posibles de desaceleracion (enum: nombres para los valores 0,1,2,3) */
 typedef enum {
@@ -70,6 +73,12 @@ typedef struct {
     double trabajoRozamiento;  /* [J] */
     double energiaDisipada;  /* [J] */
 } ResultadoFisico;
+/* Resultado del analisis de seguridad del angulo (Integrante 4) */
+typedef struct {
+    double angulo;              /* Angulo ingresado (grados) */
+    int    esSeguro;            /* 1 = dentro de ventana, 0 = fuera */
+    char   diagnostico[120];    /* Texto del diagnostico */
+} ResultadoSeguridad;
 
 /* ------------- PROTOTIPOS: DESACELERACION DE LA TRIPULACION ------------- */
 
@@ -115,9 +124,15 @@ typedef struct {
     DatosReingreso reingreso;
     DatosAmerizaje amerizaje;
     ResultadoFisico fisico;
+    ResultadoSeguridad seguridad;
     int cantidadHistorial;
 } EstadoSimulador;
 
 void cargarDatosPredeterminados(EstadoSimulador *estado);
+/* ------------- PROTOTIPOS: ANGULO DE REINGRESO Y SEGURIDAD (Integrante 4) ------------- */
+int  validarAnguloReingreso(double angulo);
+void evaluarTrayectoriaReingreso(double angulo, char *resultado);
+void analizarConsecuenciasAngulo(double angulo, char *explicacion);
+void mostrarAnalisisSeguridad(EstadoSimulador *estado);
 
 #endif
