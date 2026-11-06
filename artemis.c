@@ -12,6 +12,71 @@
 #include <math.h>
 #include "artemis.h"
 
+/* ============================================================
+ *          ENERGIAS Y TRABAJO DURANTE EL REINGRESO
+ * ============================================================ */
+
+void calcularResultadosReingreso(const DatosMision *mision,
+                                 const DatosReingreso *reingreso,
+                                 ResultadoFisico *resultado)
+{
+    double masa = mision->masaOrion;
+    double gravedad = mision->gravedad;
+    double vi = reingreso->velocidadInicial;
+    double vf = reingreso->velocidadFinal;
+
+    resultado->energiaCineticaInicial = 0.5 * masa * vi * vi;
+    resultado->energiaCineticaFinal = 0.5 * masa * vf * vf;
+    resultado->energiaPotencialInicial = masa * gravedad * reingreso->alturaInicial;
+    resultado->energiaPotencialFinal = masa * gravedad * reingreso->alturaFinal;
+
+    resultado->trabajoGravedad =
+        resultado->energiaPotencialInicial - resultado->energiaPotencialFinal;
+    resultado->trabajoRozamiento =
+        resultado->energiaCineticaFinal - resultado->energiaCineticaInicial
+        - resultado->trabajoGravedad;
+    resultado->energiaDisipada = -resultado->trabajoRozamiento;
+}
+/* Muestra los resultados del reingreso atmosferico. */
+void mostrarAnalisisRozamiento(const DatosReingreso *reingreso,
+                               const DatosMision *mision,
+                               ResultadoFisico *resultado)
+{
+    calcularResultadosReingreso(mision, reingreso, resultado);
+
+    printf("\n--- Reingreso atmosferico ---\n");
+    printf("Energia cinetica inicial: %.2f J\n", resultado->energiaCineticaInicial);
+    printf("Energia cinetica final: %.2f J\n", resultado->energiaCineticaFinal);
+    printf("Energia potencial inicial: %.2f J\n", resultado->energiaPotencialInicial);
+    printf("Energia potencial final: %.2f J\n", resultado->energiaPotencialFinal);
+    printf("Trabajo de la gravedad: %.2f J\n", resultado->trabajoGravedad);
+    printf("Trabajo del rozamiento: %.2f J\n", resultado->trabajoRozamiento);
+    printf("Energia disipada: %.2f J\n", resultado->energiaDisipada);
+    printf("La resistencia del aire reduce la rapidez de la capsula.\n");
+    printf("El escudo termico protege la capsula del calentamiento durante el reingreso.\n");
+}
+
+/* Carga los valores originales del escenario Artemis. */
+void cargarDatosPredeterminados(EstadoSimulador *estado)
+{
+    estado->mision = (DatosMision){
+        .masaOrion = 10400.0,
+        .gravedad = GRAVEDAD_TERRESTRE
+    };
+
+    estado->reingreso = (DatosReingreso){
+        .velocidadInicial = 11000.0,
+        .velocidadFinal = 25.0,
+        .tiempoDesaceleracion = 400.0,
+        .alturaInicial = 120000.0,
+        .alturaFinal = 2500.0
+    };
+
+    estado->amerizaje = (DatosAmerizaje){
+        .velocidadImpacto = 8.0,
+        .distanciaHundimiento = 1.50
+    };
+}
 /* =====================================================================
  *                 DESACELERACION DE LA TRIPULACION
  * ===================================================================== */
