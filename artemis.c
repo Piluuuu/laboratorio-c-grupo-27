@@ -12,6 +12,32 @@
 #include <math.h>
 #include "artemis.h"
 
+/* ============================================================
+ *          ENERGIAS Y TRABAJO DURANTE EL REINGRESO
+ * ============================================================ */
+
+void calcularResultadosReingreso(const DatosMision *mision,
+                                 const DatosReingreso *reingreso,
+                                 ResultadoFisico *resultado)
+{
+    double masa = mision->masaOrion;
+    double gravedad = mision->gravedad;
+    double vi = reingreso->velocidadInicial;
+    double vf = reingreso->velocidadFinal;
+
+    resultado->energiaCineticaInicial = 0.5 * masa * vi * vi;
+    resultado->energiaCineticaFinal = 0.5 * masa * vf * vf;
+    resultado->energiaPotencialInicial = masa * gravedad * reingreso->alturaInicial;
+    resultado->energiaPotencialFinal = masa * gravedad * reingreso->alturaFinal;
+
+    resultado->trabajoGravedad =
+        resultado->energiaPotencialInicial - resultado->energiaPotencialFinal;
+    resultado->trabajoRozamiento =
+        resultado->energiaCineticaFinal - resultado->energiaCineticaInicial
+        - resultado->trabajoGravedad;
+    resultado->energiaDisipada = -resultado->trabajoRozamiento;
+}
+
 /* =====================================================================
  *                 DESACELERACION DE LA TRIPULACION
  * ===================================================================== */

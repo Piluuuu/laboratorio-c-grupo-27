@@ -43,6 +43,8 @@ typedef struct {
     double velocidadInicial;     /* [m/s] */
     double velocidadFinal;       /* [m/s] */
     double tiempoDesaceleracion; /* [s]   */
+    double alturaInicial;   /* [m] */
+    double alturaFinal;   /* [m] */
 } DatosReingreso;
 
 /* Datos del amerizaje */
@@ -60,6 +62,13 @@ typedef struct {
     double fuerzaPromedioAgua;   /* [N]                      */
     double pesoNave;             /* [N]                      */
     double fuerzaEnPesos;        /* fuerza / peso (adimens.) */
+    double energiaCineticaInicial;  /* [J] */
+    double energiaCineticaFinal;  /* [J] */
+    double energiaPotencialInicial;  /* [J] */
+    double energiaPotencialFinal;  /* [J] */
+    double trabajoGravedad;  /* [J] */
+    double trabajoRozamiento;  /* [J] */
+    double energiaDisipada;  /* [J] */
 } ResultadoFisico;
 
 /* ------------- PROTOTIPOS: DESACELERACION DE LA TRIPULACION ------------- */
@@ -82,5 +91,5 @@ const char *evaluarImpacto(double fuerzaEnPesos);
 void mostrarAnalisisAmerizaje(const DatosAmerizaje *amerizaje,
                               const DatosMision *mision,
                               ResultadoFisico *resultado);
-
+void calcularResultadosReingreso(const DatosMision *mision, const DatosReingreso *reingreso, ResultadoFisico *resultado);
 #endif
