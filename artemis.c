@@ -37,6 +37,24 @@ void calcularResultadosReingreso(const DatosMision *mision,
         - resultado->trabajoGravedad;
     resultado->energiaDisipada = -resultado->trabajoRozamiento;
 }
+/* Muestra los resultados del reingreso atmosferico. */
+void mostrarAnalisisRozamiento(const DatosReingreso *reingreso,
+                               const DatosMision *mision,
+                               ResultadoFisico *resultado)
+{
+    calcularResultadosReingreso(mision, reingreso, resultado);
+
+    printf("\n--- Reingreso atmosferico ---\n");
+    printf("Energia cinetica inicial: %.2f J\n", resultado->energiaCineticaInicial);
+    printf("Energia cinetica final: %.2f J\n", resultado->energiaCineticaFinal);
+    printf("Energia potencial inicial: %.2f J\n", resultado->energiaPotencialInicial);
+    printf("Energia potencial final: %.2f J\n", resultado->energiaPotencialFinal);
+    printf("Trabajo de la gravedad: %.2f J\n", resultado->trabajoGravedad);
+    printf("Trabajo del rozamiento: %.2f J\n", resultado->trabajoRozamiento);
+    printf("Energia disipada: %.2f J\n", resultado->energiaDisipada);
+    printf("La resistencia del aire reduce la rapidez de la capsula.\n");
+    printf("El escudo termico protege la capsula del calentamiento durante el reingreso.\n");
+}
 
 /* =====================================================================
  *                 DESACELERACION DE LA TRIPULACION

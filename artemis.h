@@ -92,4 +92,6 @@ void mostrarAnalisisAmerizaje(const DatosAmerizaje *amerizaje,
                               const DatosMision *mision,
                               ResultadoFisico *resultado);
 void calcularResultadosReingreso(const DatosMision *mision, const DatosReingreso *reingreso, ResultadoFisico *resultado);
+void mostrarAnalisisRozamiento(const DatosReingreso *reingreso, const DatosMision *mision, ResultadoFisico *resultado);
+
 #endif
