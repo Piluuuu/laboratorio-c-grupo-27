@@ -4,7 +4,6 @@
  * Aqui NO hay calculos fisicos: solo se coordina a los demas modulos.
  */
 #include <stdio.h>
-#include <string.h>
 #include "artemis.h"
 #include "validaciones.h"
 #include "interfaz.h"
@@ -34,8 +33,7 @@ int main(void)
 void inicializarSimulador(EstadoSimulador *estado)
 {
     cargarDatosPredeterminados(estado);
-    memset(&estado->fisico, 0, sizeof(ResultadoFisico));
-    memset(&estado->seguridad, 0, sizeof(ResultadoSeguridad));
+    invalidarResultados(estado);
     inicializarHistorial(estado);
 }
 
@@ -52,6 +50,7 @@ void ejecutarMenuPrincipal(EstadoSimulador *estado)
 
 /*
  * Muestra el menu y pide una opcion hasta que sea valida (1 a 8).
+ * Si el texto ingresado no es un numero entero se informa y se vuelve a pedir.
  * Si la entrada se cierra (EOF, Ctrl+D / Ctrl+Z) devuelve OPCION_SALIR
  * para no quedar en un bucle infinito.
  */
@@ -59,13 +58,17 @@ int leerOpcionPrincipal(void)
 {
     int opcion = 0;
     int opcionValida = 0;
+    ResultadoLectura lectura;
 
     do {
         mostrarMenuPrincipal();
-        if (!leerEntero("Seleccione una opcion: ", &opcion)) {
+        lectura = leerEntero("Seleccione una opcion: ", &opcion);
+        if (lectura == LECTURA_EOF) {
             mostrarMensajeAdvertencia("Entrada cerrada. Se sale del programa.");
             opcion = OPCION_SALIR;
             opcionValida = 1;
+        } else if (lectura == LECTURA_INVALIDA) {
+            mostrarMensajeError("Entrada invalida: ingrese un numero entero entre 1 y 8.");
         } else if (validarOpcionMenu(opcion, OPCION_REINGRESO, OPCION_SALIR)) {
             opcionValida = 1;
         } else {
@@ -82,16 +85,23 @@ void procesarOpcionPrincipal(int opcion, EstadoSimulador *estado)
     switch (opcion) {
         case OPCION_REINGRESO:
             mostrarAnalisisRozamiento(&estado->reingreso, &estado->mision,
-                              &estado->fisico);
+                                      &estado->fisico);
+            registrarSimulacion(estado, opcion);
             break;
         case OPCION_DESACELERACION:
-            mostrarAnalisisDesaceleracion(estado);
+            mostrarAnalisisDesaceleracion(&estado->reingreso, &estado->mision,
+                                          &estado->fisico);
+            registrarSimulacion(estado, opcion);
             break;
         case OPCION_AMERIZAJE:
-            mostrarAnalisisAmerizaje(estado);
+            mostrarAnalisisAmerizaje(&estado->amerizaje, &estado->mision,
+                                     &estado->fisico);
+            registrarSimulacion(estado, opcion);
             break;
         case OPCION_ANGULO:
-            mostrarAnalisisSeguridad(estado);
+            if (mostrarAnalisisSeguridad(estado)) {
+                registrarSimulacion(estado, opcion);
+            }
             break;
         case OPCION_PARAMETROS:
             ejecutarSubmenuParametros(estado);
@@ -119,11 +129,15 @@ void ejecutarSubmenuParametros(EstadoSimulador *estado)
 {
     int opcion = PARAM_VOLVER;
     int terminar = 0;
+    ResultadoLectura lectura;
 
     do {
         mostrarMenuParametros();
-        if (!leerEntero("Seleccione una opcion: ", &opcion)) {
+        lectura = leerEntero("Seleccione una opcion: ", &opcion);
+        if (lectura == LECTURA_EOF) {
             terminar = 1;             /* EOF: volver; el menu principal tambien saldra */
+        } else if (lectura == LECTURA_INVALIDA) {
+            mostrarMensajeError("Entrada invalida: ingrese un numero entero entre 1 y 3.");
         } else if (!validarOpcionMenu(opcion, PARAM_MODIFICAR, PARAM_VOLVER)) {
             mostrarMensajeError("Opcion inexistente. Elija un numero entre 1 y 3.");
         } else if (opcion == PARAM_MODIFICAR) {

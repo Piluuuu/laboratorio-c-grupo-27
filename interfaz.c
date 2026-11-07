@@ -16,7 +16,7 @@ void mostrarPresentacion(void)
     printf("              y amerizaje (Trabajo, Energia e Impacto)\n");
     printf("--------------------------------------------------------------\n");
     printf(" El modulo de tripulacion Orion regresa de la Luna, frena en\n");
-    printf(" la atmosfera, abre sus paracaidas y amiza en el Pacifico.\n");
+    printf(" la atmosfera, abre sus paracaidas y ameriza en el Pacifico.\n");
     printf("==============================================================\n");
 }
 
@@ -27,7 +27,7 @@ void mostrarMenuPrincipal(void)
     printf(" %d. Analisis de desaceleracion\n", OPCION_DESACELERACION);
     printf(" %d. Simulacion de amerizaje\n", OPCION_AMERIZAJE);
     printf(" %d. Analisis del angulo de reingreso\n", OPCION_ANGULO);
-    printf(" %d. Modificar parametros de la mision\n", OPCION_PARAMETROS);
+    printf(" %d. Parametros de la mision (modificar / restablecer)\n", OPCION_PARAMETROS);
     printf(" %d. Historial de simulaciones\n", OPCION_HISTORIAL);
     printf(" %d. Reporte final de mision\n", OPCION_REPORTE);
     printf(" %d. Salir\n", OPCION_SALIR);
