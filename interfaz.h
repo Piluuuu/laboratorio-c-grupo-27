@@ -15,3 +15,9 @@ void mostrarMensajeAdvertencia(const char *mensaje);
 void pausar(void);
 
 #endif /* INTERFAZ_H */
+#include "artemis.h"
+
+void mostrarDatosIniciales(const EstadoSimulador *estado);
+void mostrarResultadosReingreso(const EstadoSimulador *estado);
+void mostrarResultadosAmerizaje(const EstadoSimulador *estado);
+void mostrarResumenMision(const EstadoSimulador *estado);
