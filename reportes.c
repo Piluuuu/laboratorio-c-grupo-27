@@ -237,5 +237,52 @@ void generarReporteFinal(const EstadoSimulador *estado)
     }
     escribirReporte(archivo, estado);
     fclose(archivo);
+    
+    mostrarEstadisticasMision(estado);
+    
     printf("Reporte guardado en el archivo %s\n", ARCHIVO_REPORTE);
+    }
+void mostrarEstadisticasMision(const EstadoSimulador *estado)
+{
+    int i;
+    int reingresos = 0;
+    int desaceleraciones = 0;
+    int amerizajes = 0;
+    int angulos = 0;
+
+    printf("\n========================================\n");
+    printf("      ESTADISTICAS DE LA MISION\n");
+    printf("========================================\n");
+
+    printf("Simulaciones totales: %d\n",
+           estado->cantidadHistorial);
+
+    for (i = 0; i < estado->cantidadHistorial; i++)
+    {
+        switch (estado->historial[i].tipo)
+        {
+            case OPCION_REINGRESO:
+                reingresos++;
+                break;
+
+            case OPCION_DESACELERACION:
+                desaceleraciones++;
+                break;
+
+            case OPCION_AMERIZAJE:
+                amerizajes++;
+                break;
+
+            case OPCION_ANGULO:
+                angulos++;
+                break;
+        }
+    }
+
+    printf("Analisis de reingreso     : %d\n", reingresos);
+    printf("Analisis desaceleracion   : %d\n", desaceleraciones);
+    printf("Analisis de amerizaje     : %d\n", amerizajes);
+    printf("Analisis de angulo        : %d\n", angulos);
+
+    printf("========================================\n");
 }
