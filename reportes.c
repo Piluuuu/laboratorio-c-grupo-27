@@ -190,12 +190,45 @@ static void escribirReporte(FILE *f, const EstadoSimulador *estado)
     fprintf(f, "==============================================================\n");
 }
 
-/* Opcion 7: muestra el reporte por pantalla y lo guarda en un archivo de texto. */
+/* Muestra cuantas simulaciones de cada tipo hay en el historial. */
+void mostrarEstadisticasMision(const EstadoSimulador *estado)
+{
+    int i;
+    int reingresos = 0;
+    int desaceleraciones = 0;
+    int amerizajes = 0;
+    int angulos = 0;
+
+    for (i = 0; i < estado->cantidadHistorial; i++) {
+        switch (estado->historial[i].tipo) {
+            case OPCION_REINGRESO:      reingresos++;        break;
+            case OPCION_DESACELERACION: desaceleraciones++;  break;
+            case OPCION_AMERIZAJE:      amerizajes++;        break;
+            case OPCION_ANGULO:         angulos++;           break;
+            default:                                         break;
+        }
+    }
+
+    printf("\n========================================\n");
+    printf("      ESTADISTICAS DE LA MISION\n");
+    printf("========================================\n");
+    printf("Simulaciones totales      : %d\n", estado->totalSimulaciones);
+    printf("En el historial (ultimas) : %d\n", estado->cantidadHistorial);
+    printf("  Analisis de reingreso   : %d\n", reingresos);
+    printf("  Analisis desaceleracion : %d\n", desaceleraciones);
+    printf("  Analisis de amerizaje   : %d\n", amerizajes);
+    printf("  Analisis de angulo      : %d\n", angulos);
+    printf("========================================\n");
+}
+
+/* Opcion 7: muestra el reporte y las estadisticas por pantalla y guarda el
+ * reporte en un archivo de texto. */
 void generarReporteFinal(const EstadoSimulador *estado)
 {
     FILE *archivo;
 
     escribirReporte(stdout, estado);
+    mostrarEstadisticasMision(estado);
 
     archivo = fopen(ARCHIVO_REPORTE, "w");
     if (archivo == NULL) {

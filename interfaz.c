@@ -62,3 +62,119 @@ void pausar(void)
         c = getchar();
     } while (c != '\n' && c != EOF);
 }
+void mostrarDatosIniciales(const EstadoSimulador *estado)
+{
+    printf("\n==================================================\n");
+    printf("           DATOS INICIALES DE LA MISION\n");
+    printf("==================================================\n");
+
+    printf("Masa de Orion           : %.2f kg\n",
+           estado->mision.masaOrion);
+
+    printf("Gravedad terrestre      : %.2f m/s^2\n",
+           estado->mision.gravedad);
+
+    printf("Velocidad inicial       : %.2f m/s\n",
+           estado->reingreso.velocidadInicial);
+
+    printf("Velocidad final         : %.2f m/s\n",
+           estado->reingreso.velocidadFinal);
+
+    printf("Tiempo desaceleracion   : %.2f s\n",
+           estado->reingreso.tiempoDesaceleracion);
+
+    printf("Altura inicial          : %.2f m\n",
+           estado->reingreso.alturaInicial);
+
+    printf("Altura final            : %.2f m\n",
+           estado->reingreso.alturaFinal);
+
+    printf("Velocidad impacto       : %.2f m/s\n",
+           estado->amerizaje.velocidadImpacto);
+
+    printf("Distancia hundimiento   : %.2f m\n",
+           estado->amerizaje.distanciaHundimiento);
+
+    printf("==================================================\n");
+}
+
+void mostrarResultadosReingreso(const EstadoSimulador *estado)
+{
+    printf("\n==================================================\n");
+    printf("          RESULTADOS DEL REINGRESO\n");
+    printf("==================================================\n");
+
+    printf("Energia cinetica inicial : %.2f J\n",
+           estado->fisico.energiaCineticaInicial);
+
+    printf("Energia cinetica final   : %.2f J\n",
+           estado->fisico.energiaCineticaFinal);
+
+    printf("Energia potencial inicial: %.2f J\n",
+           estado->fisico.energiaPotencialInicial);
+
+    printf("Energia potencial final  : %.2f J\n",
+           estado->fisico.energiaPotencialFinal);
+
+    printf("Trabajo gravedad         : %+.2f J\n",
+           estado->fisico.trabajoGravedad);
+
+    printf("Trabajo rozamiento       : %+.2f J\n",
+           estado->fisico.trabajoRozamiento);
+
+    printf("Energia disipada         : %.2f J\n",
+           estado->fisico.energiaDisipada);
+
+    printf("==================================================\n");
+}
+
+void mostrarResultadosAmerizaje(const EstadoSimulador *estado)
+{
+    printf("\n==================================================\n");
+    printf("          RESULTADOS DEL AMERIZAJE\n");
+    printf("==================================================\n");
+
+    printf("Energia de impacto       : %.2f J\n",
+           estado->fisico.energiaImpacto);
+
+    printf("Trabajo gravedad         : %+.2f J\n",
+           estado->fisico.trabajoGravedadAmerizaje);
+
+    printf("Trabajo del agua         : %+.2f J\n",
+           estado->fisico.trabajoAgua);
+
+    printf("Fuerza promedio agua     : %.2f N\n",
+           estado->fisico.fuerzaPromedioAgua);
+
+    printf("Peso de Orion            : %.2f N\n",
+           estado->fisico.pesoNave);
+
+    printf("Relacion fuerza/peso     : %.4f\n",
+           estado->fisico.fuerzaEnPesos);
+
+    printf("==================================================\n");
+}
+
+void mostrarResumenMision(const EstadoSimulador *estado)
+{
+    printf("\n==================================================\n");
+    printf("               RESUMEN DE MISION\n");
+    printf("==================================================\n");
+
+    printf("Reingreso calculado      : %s\n",
+           estado->reingresoCalculado ? "SI" : "NO");
+
+    printf("Desaceleracion calculada : %s\n",
+           estado->desaceleracionCalculada ? "SI" : "NO");
+
+    printf("Amerizaje calculado      : %s\n",
+           estado->amerizajeCalculado ? "SI" : "NO");
+
+    printf("Analisis de angulo       : %s\n",
+           estado->anguloCalculado ? "SI" : "NO");
+
+    printf("Total de simulaciones    : %d\n",
+           estado->totalSimulaciones);
+
+    printf("==================================================\n");
+}

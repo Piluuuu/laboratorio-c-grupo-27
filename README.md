@@ -157,7 +157,7 @@ Al iniciar se muestra la presentación y el menú principal. Se elige una opció
 | 4 | Análisis de seguridad del ángulo de reingreso (ventana segura: 5,5° a 7,0°). |
 | 5 | Parámetros de la misión: modificar uno por uno o restablecer los valores originales. |
 | 6 | Historial de las simulaciones ejecutadas (guarda las últimas 20 con sus datos y resultados). |
-| 7 | Reporte final: se muestra por pantalla y se guarda en `reporte_artemis.txt`. |
+| 7 | Reporte final: se muestra por pantalla con estadísticas de las simulaciones y se guarda en `reporte_artemis.txt`. |
 | 8 | Salir. |
 
 Al modificar o restablecer parámetros se descartan los resultados anteriores (el historial se conserva), así que hay que volver a ejecutar los análisis. Todas las entradas se validan: ante un dato inválido se informa el error y se vuelve a pedir.
@@ -197,3 +197,5 @@ Con el modelo que desprecia el peso (`AMERIZAJE_INCLUYE_GRAVEDAD 0`): trabajo de
 | `interfaz.h` / `interfaz.c` | Presentación, menús y mensajes. Solo imprime. |
 | `reportes.h` / `reportes.c` | Historial de simulaciones y reporte final. |
 | `Makefile` | Compilación con `make` / `make clean`. |
+
+Los textos se escriben sin tildes para que se vean bien en cualquier consola.
