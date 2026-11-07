@@ -10,7 +10,13 @@ Aplicar programación estructurada y modularización en C para analizar, con los
 
 ## Integrantes
 
-> _Completar con los nombres, legajos y la división de tareas del grupo, según lo que pida la consigna._
+| Integrante | Apellido y nombre | Legajo | Responsabilidad |
+|:---:|---|:---:|---|
+| 1 | Verón Romero, Pilar | 31096 | Arquitectura principal y menú |
+| 2 | Nuñez, Lourdes Antonella | 31083 | Energía y trabajo del reingreso |
+| 3 | Pavich, Yaritza | 31647 | Desaceleración y amerizaje |
+| 4 | Canteros, Lara Ailin | 31094 | Seguridad y validaciones |
+| 5 | Rolon, Victoria | _(a completar)_ | Interfaz, historial y reportes |
 
 ## Uso de herramientas de IA
 
@@ -108,9 +114,28 @@ Cada integrante registra a continuación qué herramienta utilizó, para qué, c
 - Se adaptaron las firmas de `leerEntero` y `validarOpcionMenu` para coincidir con el uso que ya hacía `main.c`.
 - Se verificó en el repositorio que `ResultadoSeguridad`, las constantes de la ventana de seguridad (5,5° a 7,0°) y los prototipos quedaran bien ubicados y sin eliminar el código de desaceleración y amerizaje.
 
-### Integrante 5
+### Integrante 5 - Interfaz, historial y reportes
 
-_Pendiente por ahora._
+**Herramientas:** Microsoft Copilot y Antigravity.
+
+**Para qué se usaron:**
+
+- Analizar la estructura general del proyecto y la integración entre `main.c`, `interfaz.c` / `interfaz.h`, `reportes.c` / `reportes.h` y `artemis.h`, verificando que las funciones fueran coherentes con la división de tareas asignada.
+- Identificar funciones faltantes en los módulos de interfaz y reportes y recibir orientación para integrarlas sin afectar la lógica de los demás integrantes.
+- Revisar la organización del historial de simulaciones y la generación de reportes finales, detectando posibles problemas de compatibilidad antes de subir los cambios al repositorio.
+- Diseñar la presentación visual de la consola (menús, resultados, resúmenes y reportes) y proponer una navegación más clara para el usuario.
+
+**Prompts utilizados (resumen):**
+
+- «Necesito un prompt para una IA de programación porque debo hacer un trabajo universitario sobre este escenario de reingreso atmosférico.»
+- «Analiza estos archivos y dime qué funciones faltan implementar.»
+- «Ayúdame a diseñar una interfaz de consola clara para el simulador y propón una presentación visual para los menús y resultados.»
+
+**Cómo se validó y adaptó:**
+
+- Se compararon las sugerencias con la consigna original y con la división de responsabilidades acordada por el grupo.
+- Se verificó la compatibilidad de las funciones incorporadas con la estructura `EstadoSimulador` y que no alteraran los cálculos físicos de otros integrantes.
+- Se revisó manualmente la ubicación de cada función y se adaptaron las propuestas a la arquitectura, los nombres de funciones y la organización del repositorio.
 
 ## Requisitos
 
@@ -157,7 +182,7 @@ Al iniciar se muestra la presentación y el menú principal. Se elige una opció
 | 4 | Análisis de seguridad del ángulo de reingreso (ventana segura: 5,5° a 7,0°). |
 | 5 | Parámetros de la misión: modificar uno por uno o restablecer los valores originales. |
 | 6 | Historial de las simulaciones ejecutadas (guarda las últimas 20 con sus datos y resultados). |
-| 7 | Reporte final: se muestra por pantalla con estadísticas de las simulaciones y se guarda en `reporte_artemis.txt`. |
+| 7 | Reporte final: se muestra por pantalla y se guarda en `reporte_artemis.txt`. |
 | 8 | Salir. |
 
 Al modificar o restablecer parámetros se descartan los resultados anteriores (el historial se conserva), así que hay que volver a ejecutar los análisis. Todas las entradas se validan: ante un dato inválido se informa el error y se vuelve a pedir.
@@ -168,7 +193,6 @@ Al modificar o restablecer parámetros se descartan los resultados anteriores (e
 - **Desaceleración:** `a = (v_f - v_i) / t` y `a_g = |a| / g`. Se asume desaceleración uniforme.
 - **Amerizaje:** `K = ½·m·v²`. Por defecto la gravedad también realiza trabajo durante el hundimiento (`W_g = m·g·d`), por lo que `W_agua = ΔK - W_g` y la fuerza media del agua es `|W_agua| / d`.
   Este supuesto se controla con la constante `AMERIZAJE_INCLUYE_GRAVEDAD` de `artemis.h`: con valor `0` se desprecia el peso durante el hundimiento (`W_agua = ΔK`).
-- **Ángulo de reingreso:** la ventana de seguridad de 5,5° a 7,0° es un criterio complementario definido por el grupo para este análisis, no un dato de la consigna. El programa solo clasifica el ángulo según esa ventana; no simula la trayectoria orbital ni el escudo térmico.
 - Los umbrales que clasifican la desaceleración y el impacto son criterios del grupo (no provienen de la consigna).
 
 Resultados con los datos predeterminados:
@@ -198,5 +222,3 @@ Con el modelo que desprecia el peso (`AMERIZAJE_INCLUYE_GRAVEDAD 0`): trabajo de
 | `interfaz.h` / `interfaz.c` | Presentación, menús y mensajes. Solo imprime. |
 | `reportes.h` / `reportes.c` | Historial de simulaciones y reporte final. |
 | `Makefile` | Compilación con `make` / `make clean`. |
-
-Los textos se escriben sin tildes para que se vean bien en cualquier consola.
