@@ -22,4 +22,7 @@ void mostrarHistorialSimulaciones(const EstadoSimulador *estado);   /* opcion 6 
 /* Muestra el reporte por pantalla y lo guarda en ARCHIVO_REPORTE. */
 void generarReporteFinal(const EstadoSimulador *estado);            /* opcion 7 */
 
+/* Cantidad de simulaciones de cada tipo (parte de la opcion 7). */
+void mostrarEstadisticasMision(const EstadoSimulador *estado);
+
 #endif /* REPORTES_H */

@@ -168,6 +168,7 @@ Al modificar o restablecer parámetros se descartan los resultados anteriores (e
 - **Desaceleración:** `a = (v_f - v_i) / t` y `a_g = |a| / g`. Se asume desaceleración uniforme.
 - **Amerizaje:** `K = ½·m·v²`. Por defecto la gravedad también realiza trabajo durante el hundimiento (`W_g = m·g·d`), por lo que `W_agua = ΔK - W_g` y la fuerza media del agua es `|W_agua| / d`.
   Este supuesto se controla con la constante `AMERIZAJE_INCLUYE_GRAVEDAD` de `artemis.h`: con valor `0` se desprecia el peso durante el hundimiento (`W_agua = ΔK`).
+- **Ángulo de reingreso:** la ventana de seguridad de 5,5° a 7,0° es un criterio complementario definido por el grupo para este análisis, no un dato de la consigna. El programa solo clasifica el ángulo según esa ventana; no simula la trayectoria orbital ni el escudo térmico.
 - Los umbrales que clasifican la desaceleración y el impacto son criterios del grupo (no provienen de la consigna).
 
 Resultados con los datos predeterminados:

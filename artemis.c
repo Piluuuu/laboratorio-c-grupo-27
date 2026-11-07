@@ -60,7 +60,7 @@ void mostrarAnalisisRozamiento(const DatosReingreso *reingreso,
     printf("Trabajo del rozamiento    : %+.2f J\n", resultado->trabajoRozamiento);
     printf("Energia disipada          : %.2f J\n", resultado->energiaDisipada);
     printf("La resistencia del aire reduce la rapidez de la capsula.\n");
-    printf("El escudo termico protege la capsula del calentamiento durante el reingreso.\n");
+    printf("El escudo termico esta disenado para proteger la capsula del calentamiento durante el reingreso atmosferico.\n");
 }
 
 /* =====================================================================
@@ -248,11 +248,11 @@ void evaluarTrayectoriaReingreso(double angulo, char *resultado, size_t tam)
     if (!isfinite(angulo)) {
         texto = "INDETERMINADA";
     } else if (angulo < ANGULO_MIN_SEGURO) {
-        texto = "REBOTE_ATMOSFERICO";
+        texto = "RIESGO_DE_REBOTE";
     } else if (angulo > ANGULO_MAX_SEGURO) {
-        texto = "DESACELERACION_EXCESIVA";
+        texto = "RIESGO_DE_DESACELERACION_EXCESIVA";
     } else {
-        texto = "SEGURA";
+        texto = "DENTRO_DE_LA_VENTANA";
     }
     snprintf(resultado, tam, "%s", texto);
 }
@@ -266,26 +266,25 @@ void analizarConsecuenciasAngulo(double angulo, char *explicacion, size_t tam)
     } else if (angulo < ANGULO_MIN_SEGURO) {
         snprintf(explicacion, tam,
             "ANGULO BAJO (%.2f < %.1f):\n"
-            "  - La capsula no penetra lo suficiente en la atmosfera.\n"
-            "  - Se produce un REBOTE ATMOSFERICO.\n"
-            "  - La nave sale de nuevo al espacio y se pierde la mision.\n"
-            "  - No se logra el amerizaje previsto.",
+            "  - El angulo queda por debajo de la ventana de seguridad definida.\n"
+            "  - Existe riesgo de rebote atmosferico.\n"
+            "  - La trayectoria podria no permitir el reingreso previsto.\n"
+            "  - El amerizaje previsto podria no lograrse.",
             angulo, ANGULO_MIN_SEGURO);
     } else if (angulo > ANGULO_MAX_SEGURO) {
         snprintf(explicacion, tam,
             "ANGULO ALTO (%.2f > %.1f):\n"
-            "  - La capsula entra demasiado pronunciada en la atmosfera.\n"
-            "  - Se genera DESACELERACION EXCESIVA.\n"
-            "  - La tripulacion experimenta fuerzas g peligrosas.\n"
-            "  - Riesgo de dano estructural o lesiones graves.",
+            "  - El angulo queda por encima de la ventana de seguridad definida.\n"
+            "  - Existe riesgo de desaceleracion excesiva.\n"
+            "  - La tripulacion podria quedar expuesta a fuerzas g elevadas.\n"
+            "  - Podria haber riesgo de dano estructural o lesiones.",
             angulo, ANGULO_MAX_SEGURO);
     } else {
         snprintf(explicacion, tam,
             "ANGULO DENTRO DE LA VENTANA DE SEGURIDAD (%.2f):\n"
-            "  - Trayectoria OPTIMA de reingreso.\n"
-            "  - La desaceleracion se mantiene en niveles seguros.\n"
-            "  - El escudo termico funciona correctamente.\n"
-            "  - Se garantiza un amerizaje controlado en el oceano.",
+            "  - El angulo se encuentra dentro de la ventana de seguridad definida para este analisis.\n"
+            "  - La trayectoria favorece un reingreso controlado.\n"
+            "  - Se reduce el riesgo de rebote atmosferico y de desaceleracion excesiva.",
             angulo);
     }
 }
@@ -327,13 +326,13 @@ int mostrarAnalisisSeguridad(EstadoSimulador *estado)
 
     if (estado->seguridad.esSeguro) {
         snprintf(estado->seguridad.diagnostico, sizeof estado->seguridad.diagnostico,
-                 "SEGURO - Dentro de la ventana de reingreso");
+                 "SEGURO - Dentro de la ventana de seguridad definida");
     } else if (angulo < ANGULO_MIN_SEGURO) {
         snprintf(estado->seguridad.diagnostico, sizeof estado->seguridad.diagnostico,
-                 "PELIGRO - Riesgo de rebote atmosferico");
+                 "PELIGRO - Angulo bajo: riesgo de rebote atmosferico");
     } else {
         snprintf(estado->seguridad.diagnostico, sizeof estado->seguridad.diagnostico,
-                 "PELIGRO - Riesgo de desaceleracion excesiva");
+                 "PELIGRO - Angulo alto: riesgo de desaceleracion excesiva");
     }
 
     evaluarTrayectoriaReingreso(angulo, tipoTrayectoria, sizeof tipoTrayectoria);
@@ -350,6 +349,9 @@ int mostrarAnalisisSeguridad(EstadoSimulador *estado)
     printf("  Tipo de trayectoria  : %s\n", tipoTrayectoria);
     printf("------------------------------------------------------------\n");
     printf("%s\n", consecuencias);
+    printf("------------------------------------------------------------\n");
+    printf("  Nota: el angulo se clasifica segun la ventana definida; el\n");
+    printf("  programa no simula la trayectoria ni el escudo termico.\n");
     printf("============================================================\n");
     return 1;
 }
