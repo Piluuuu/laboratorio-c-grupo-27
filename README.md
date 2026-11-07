@@ -14,7 +14,103 @@ Aplicar programación estructurada y modularización en C para analizar, con los
 
 ## Uso de herramientas de IA
 
-> _Completar según lo que exija la consigna (herramientas utilizadas y en qué partes)._
+Cada integrante registra a continuación qué herramienta utilizó, para qué, con qué prompts representativos y cómo validó y adaptó el resultado. En todos los casos las respuestas de la IA se tomaron como orientación y fueron revisadas antes de incorporarse al proyecto.
+
+### Integrante 1 - Arquitectura principal y menú
+
+**Herramientas:** ChatGPT (OpenAI) y Claude (Anthropic).
+
+**Para qué se usaron:**
+
+- Organizar la arquitectura inicial del proyecto: archivos `.c` y `.h` necesarios y distribución de responsabilidades entre los integrantes.
+- Comprender los archivos de cabecera, los prototipos de funciones y la modularización en C.
+- Planificar el menú principal, la navegación entre funcionalidades y las funciones de inicio, lectura de opciones y cierre del simulador.
+- Desarrollar la primera versión de la estructura principal, dejando las funcionalidades de los demás integrantes como implementaciones provisionales.
+
+**Prompts utilizados (resumen):**
+
+- «Necesito un inventario de todas las funciones necesarias para el programa, sin escribir código todavía, para poder distribuir las responsabilidades entre los integrantes.»
+- «Explicame qué son los archivos `.h` y cómo se relacionan con los `.c`.»
+- «Necesito que Claude desarrolle exclusivamente la parte del Integrante 1: arquitectura principal, `main`, navegación y menú, sin implementar los cálculos físicos ni las funcionalidades de los demás.»
+
+**Cómo se validó y adaptó:**
+
+- Se delimitaron las funciones del Integrante 1 para evitar superposiciones con el trabajo del resto del grupo.
+- Se compiló con GCC (`-Wall -Wextra -std=c99 -pedantic`) sin errores ni advertencias.
+- Se probaron la presentación, el menú, la navegación, el submenú de parámetros y el manejo de entradas inválidas.
+
+### Integrante 2 - Energía y trabajo del reingreso
+
+**Herramienta:** ChatGPT (Codex).
+
+**Para qué se usó:**
+
+- Implementar en C los cálculos de energía y trabajo del reingreso atmosférico.
+- Conectar la función con el menú sin afectar el trabajo de las demás integrantes en `main.c`.
+- Entender los errores de compilación del proyecto completo.
+- Subir los cambios a GitHub y abrir el pull request.
+
+**Prompts utilizados (resumen):**
+
+- «¿Cómo implemento en C los cálculos de energía y trabajo del reingreso atmosférico?»
+- «¿Cómo conecto mi función con el menú sin borrar lo que hicieron mis compañeras en main.c?»
+- «¿Cómo pruebo mi parte por separado si el programa completo todavía no compila?»
+
+**Cómo se validó y adaptó:**
+
+- Se probó el módulo por separado antes de integrarlo al programa completo.
+- Se revisaron y corrigieron los errores de compilación que aparecieron al integrar el módulo.
+- Se conectó la función al menú conservando el código existente en `main.c`.
+
+### Integrante 3 - Desaceleración y amerizaje
+
+**Herramienta:** Claude (Anthropic).
+
+**Para qué se usó:**
+
+- Organizar la estructura inicial del código de desaceleración y amerizaje (`artemis.c` / `artemis.h`), respetando la división de tareas del grupo.
+- Obtener explicaciones sobre las fórmulas físicas necesarias para esta etapa.
+- Comprender elementos de C usados en la implementación: `struct`, punteros, `enum`, `const` y `math.h`.
+- Resolver errores de compilación y ubicar los archivos dentro del repositorio.
+
+**Prompts utilizados (resumen):**
+
+- «Esta es la parte del trabajo que me corresponde desarrollar: desaceleración y amerizaje. Teniendo en cuenta la consigna y la división de funciones del grupo, ayudame a organizar la estructura del código y las funciones que necesito implementar.»
+- «Explicame qué fórmulas físicas debo utilizar para calcular la desaceleración y cómo aplicarlas en el código.»
+- «Estoy teniendo problemas para compilar el programa en Visual Studio Code. Ayudame a identificar el error y a encontrar una solución.»
+
+**Cómo se validó y adaptó:**
+
+- Se contrastaron los resultados del programa con cálculos manuales, por ejemplo: K = ½ · 10 400 · 8² = 332 800 J y a = 10 975 / 400 = 27,4375 m/s².
+- Se verificó que las operaciones implementadas fueran coherentes con los requerimientos de la consigna.
+- Se adaptó la estructura propuesta a la organización general del proyecto y a las funciones asignadas.
+
+### Integrante 4 - Seguridad y validaciones
+
+**Herramienta:** Grok (xAI).
+
+**Para qué se usó:**
+
+- Organizar el código de validaciones y análisis de seguridad del ángulo de reingreso (`validaciones.c` / `validaciones.h` y parte de `artemis.c` / `artemis.h`), respetando la división de tareas del grupo.
+- Comprender cómo implementar la lectura segura de datos y las validaciones de rango, opciones de menú, valores positivos y ángulos.
+- Adaptar las firmas de las funciones de validación a la forma en que ya las utilizaba `main.c`.
+- Resolver dónde agregar cada parte del código (constantes, estructuras, prototipos e implementaciones) sin sobrescribir el trabajo de otros integrantes.
+
+**Prompts utilizados (resumen):**
+
+- «Necesito el código en C de la parte de seguridad y validaciones (validaciones.c, artemis.c) del escenario 4.»
+- «Pasame solo el código que tengo que agregar a artemis.h y artemis.c, y decime dónde colocarlo.»
+- «Revisá si el código de validaciones coincide con lo que espera main.c.»
+
+**Cómo se validó y adaptó:**
+
+- Se revisó la distribución de tareas para implementar únicamente las funciones asignadas a este integrante.
+- Se adaptaron las firmas de `leerEntero` y `validarOpcionMenu` para coincidir con el uso que ya hacía `main.c`.
+- Se verificó en el repositorio que `ResultadoSeguridad`, las constantes de la ventana de seguridad (5,5° a 7,0°) y los prototipos quedaran bien ubicados y sin eliminar el código de desaceleración y amerizaje.
+
+### Integrante 5
+
+_Pendiente por ahora._
 
 ## Requisitos
 
@@ -101,5 +197,3 @@ Con el modelo que desprecia el peso (`AMERIZAJE_INCLUYE_GRAVEDAD 0`): trabajo de
 | `interfaz.h` / `interfaz.c` | Presentación, menús y mensajes. Solo imprime. |
 | `reportes.h` / `reportes.c` | Historial de simulaciones y reporte final. |
 | `Makefile` | Compilación con `make` / `make clean`. |
-
-Los textos se escriben sin tildes para que se vean bien en cualquier consola.
