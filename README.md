@@ -16,7 +16,7 @@ Aplicar programación estructurada y modularización en C para analizar, con los
 | 2 | Nuñez, Lourdes Antonella | 31083 | Energía y trabajo del reingreso |
 | 3 | Pavich, Yaritza | 31647 | Desaceleración y amerizaje |
 | 4 | Canteros, Lara Ailin | 31094 | Seguridad y validaciones |
-| 5 | Rolon, Victoria | _(a completar)_ | Interfaz, historial y reportes |
+| 5 | Rolon, Victoria | 31014 | Interfaz, historial y reportes |
 
 ## Uso de herramientas de IA
 
