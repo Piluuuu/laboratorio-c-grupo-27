@@ -1,4 +1,4 @@
-# Simulador Artemis - Escenario 4 (Grupo 27)
+# Simulador Artemis - Escenario 4 (Grupo 27) - Comisión K.1.2
 
 Simulador por consola, escrito en C, del **reingreso atmosférico, frenado aerodinámico y amerizaje** de la cápsula Orion (misión Artemis). Trabajo Final Integrador de Algoritmos y Estructuras de Datos.
 
